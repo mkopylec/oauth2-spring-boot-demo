@@ -1,0 +1,24 @@
+plugins {
+    id 'org.springframework.boot' version '2.0.1.RELEASE'
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+
+    sourceCompatibility = 1.10
+    targetCompatibility = 1.10
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+//        compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: '2.0.1.RELEASE'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.6'
+}
