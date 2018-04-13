@@ -6,6 +6,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
+import static com.github.mkopylec.oauth2.resourceserver.ResourceEndpoint.PROTECTED_RESOURCE_URI;
+import static com.github.mkopylec.oauth2.resourceserver.ResourceEndpoint.PUBLIC_RESOURCE_URI;
+
 @Configuration
 @EnableWebSecurity
 @EnableResourceServer
@@ -13,6 +16,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        http.authorizeRequests()
+                .antMatchers(PROTECTED_RESOURCE_URI).authenticated()
+                .antMatchers(PUBLIC_RESOURCE_URI).permitAll();
     }
 }

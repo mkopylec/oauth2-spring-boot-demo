@@ -19,7 +19,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient("client").secret("{noop}secret").scopes("scope");
+        clients.inMemory().withClient("sample-client").secret("{noop}secret").scopes("scope");
     }
 
     @Override

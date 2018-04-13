@@ -11,8 +11,7 @@ subprojects {
     targetCompatibility = 1.10
 
     ext {
-        springBootVersion = '2.0.1.RELEASE'
-        springOAuth2Version = '2.3.0.RELEASE'
+        springBootVersion = '2.0.0.RELEASE'
     }
     repositories {
         mavenCentral()

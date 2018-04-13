@@ -21,7 +21,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("user").password("{noop}password").authorities(emptyList());
+        auth.inMemoryAuthentication().withUser("sample-user").password("{noop}password").authorities(emptyList());
     }
 
     @Bean
