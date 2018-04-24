@@ -11,18 +11,23 @@ subprojects {
     targetCompatibility = 1.10
 
     ext {
-        springBootVersion = '2.0.0.RELEASE'
+        springBootVersion = '1.5.11.RELEASE'
+        springOAuth2Version = '2.3.0.RELEASE'
     }
     repositories {
         mavenCentral()
     }
 
     dependencies {
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.11.RELEASE'
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '1.5.11.RELEASE'
+        compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.0.RELEASE'
         // Deprecated JDK 10 dependencies
         compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
         compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'
         compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.0'
         compile group: 'javax.activation', name: 'activation', version: '1.1.1'
+        compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.0'
     }
 }
 
