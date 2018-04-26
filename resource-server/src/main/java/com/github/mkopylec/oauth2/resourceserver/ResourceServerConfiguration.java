@@ -6,8 +6,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
-import static com.github.mkopylec.oauth2.resourceserver.ResourceEndpoint.PROTECTED_RESOURCE_URI;
-import static com.github.mkopylec.oauth2.resourceserver.ResourceEndpoint.PUBLIC_RESOURCE_URI;
+import static com.github.mkopylec.oauth2.resourceserver.ResourceController.PROTECTED_RESOURCE_URI;
+import static com.github.mkopylec.oauth2.resourceserver.ResourceController.PUBLIC_RESOURCE_URI;
 
 @Configuration
 @EnableWebSecurity

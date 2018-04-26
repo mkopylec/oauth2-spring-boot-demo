@@ -1,0 +1,13 @@
+server:
+  port: 8084
+
+logging:
+  level:
+    org.springframework.security: debug
+
+security:
+  oauth2:
+    client:
+      client-id: client-application
+      client-secret: secret
+      grant-type: client_credentials
