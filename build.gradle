@@ -19,9 +19,8 @@ subprojects {
     }
 
     dependencies {
-        compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.11.RELEASE'
-        compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '1.5.11.RELEASE'
-        compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.0.RELEASE'
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion
+        compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: springOAuth2Version
         // Deprecated JDK 10 dependencies
         compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
         compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'

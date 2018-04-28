@@ -40,6 +40,14 @@ public class ClientCredentialsController {
                 .setResource(requestPublicResource());
     }
 
+    @PostMapping("/resource/protected")
+    public ModelAndView getProtectedResource() {
+        return new ClientCredentialsPage()
+                .setClientId(clientProperties.getClientId())
+                .setClientSecret(clientProperties.getClientSecret())
+                .setResource(requestProtectedResource());
+    }
+
     private String requestPublicResource() {
         return restTemplate.getForEntity("http://localhost:8081/resource/public", String.class).getBody();
     }
