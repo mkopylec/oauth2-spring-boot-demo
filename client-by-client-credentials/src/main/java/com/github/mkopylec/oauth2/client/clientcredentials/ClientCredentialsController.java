@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,20 +33,13 @@ public class ClientCredentialsController {
                 .setClientSecret(clientProperties.getClientSecret());
     }
 
-    @PostMapping("/resource/public")
-    public ModelAndView getPublicResource() {
+    @PostMapping
+    public ModelAndView getResource(@RequestParam("type") String type) {
+        String resource = type.equals("protected") ? requestProtectedResource() : requestPublicResource();
         return new ClientCredentialsPage()
                 .setClientId(clientProperties.getClientId())
                 .setClientSecret(clientProperties.getClientSecret())
-                .setResource(requestPublicResource());
-    }
-
-    @PostMapping("/resource/protected")
-    public ModelAndView getProtectedResource() {
-        return new ClientCredentialsPage()
-                .setClientId(clientProperties.getClientId())
-                .setClientSecret(clientProperties.getClientSecret())
-                .setResource(requestProtectedResource());
+                .setResource(resource);
     }
 
     private String requestPublicResource() {

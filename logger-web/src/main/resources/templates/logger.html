@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="/bootstrap.min.css" rel="stylesheet"/>
+    <title>OAuth 2 Flow Logger</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 text-center text-white bg-primary p-2">
+            <h2>OAuth 2 Flow Logger</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 pt-4">
+            <form action="/logger" method="post" class="p">
+                <input type="hidden" name="operation" value="refresh"/>
+                <div class="form-group row">
+                    <div class="col-12 text-right">
+                        <button type="submit" class="btn btn-primary">Refresh</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-6 pt-4">
+            <form action="/logger" method="post" class="p">
+                <input type="hidden" name="operation" value="clear"/>
+                <div class="form-group row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn btn-primary">Clear</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover table-sm">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Time</th>
+                    <th scope="col">Received By</th>
+                    <th scope="col">Method</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">Authorization Header</th>
+                    <th scope="col">Body</th>
+                    <th scope="col">Response Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="log : ${logs}">
+                    <th scope="row" th:text="${log.time}"></th>
+                    <td th:text="${log.application}"></td>
+                    <td th:text="${log.method}"></td>
+                    <td th:text="${log.url}"></td>
+                    <td th:text="${log.authorizationHeader}"></td>
+                    <td th:text="${log.body}"></td>
+                    <td th:text="${log.responseStatus}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-12 text-center text-muted small">OAuth 2 Demo 2018 Mariusz Kopylec</div>
+    </div>
+</div>
+
+</body>
+</html>

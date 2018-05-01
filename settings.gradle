@@ -2,3 +2,6 @@ rootProject.name = 'oauth2-spring-boot-demo'
 include 'authorization-server'
 include 'resource-server'
 include 'client-by-client-credentials'
+include 'logger-interceptor'
+include 'logger-web'
+

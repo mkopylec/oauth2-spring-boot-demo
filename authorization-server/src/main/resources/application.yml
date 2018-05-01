@@ -4,3 +4,6 @@ server:
 logging:
   level:
     org.springframework.security: debug
+
+logger-interceptor:
+  application-name: authorization-server

@@ -12,3 +12,4 @@ security:
       client-secret: secret
       grant-type: client_credentials
       access-token-uri: http://localhost:8080/oauth/token
+  ignored: /**

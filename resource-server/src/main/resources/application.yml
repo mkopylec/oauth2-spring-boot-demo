@@ -12,3 +12,6 @@ security:
     client:
       client-id: resource-server
       client-secret: secret
+
+logger-interceptor:
+  application-name: resource-server
