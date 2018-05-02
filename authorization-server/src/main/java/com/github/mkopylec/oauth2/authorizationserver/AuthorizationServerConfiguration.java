@@ -26,6 +26,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .authorizedGrantTypes("authorization_code", "client_credentials", "implicit", "refresh_token", "password")
                 .scopes("read-resource")
                 .redirectUris("http://localhost:8085/client/authorization-code")
+                .accessTokenValiditySeconds(30)
                 .and()
                 .withClient("resource-server")
                 .secret("secret");

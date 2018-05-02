@@ -1,0 +1,19 @@
+server:
+  port: 8083
+
+logging:
+  level:
+    org.springframework.security: debug
+
+security:
+#  oauth2:
+#    client:
+#      client-id: client-application
+#      client-secret: secret
+#      grant-type: password
+#      access-token-uri: http://localhost:8080/oauth/token
+  ignored: /**
+#    sso:
+#      login-path: /client/password/login
+#    resource:
+#      token-info-uri: http://localhost:8080/oauth/check_token

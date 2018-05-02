@@ -14,22 +14,14 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6 pt-4">
+        <div class="col-12 pt-4">
             <form action="/logger" method="post" class="p">
-                <input type="hidden" name="operation" value="refresh"/>
                 <div class="form-group row">
-                    <div class="col-12 text-right">
-                        <button type="submit" class="btn btn-primary">Refresh</button>
+                    <div class="col-6 text-right">
+                        <button type="submit" name="operation" value="refresh" class="btn btn-primary">Refresh</button>
                     </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-6 pt-4">
-            <form action="/logger" method="post" class="p">
-                <input type="hidden" name="operation" value="clear"/>
-                <div class="form-group row">
-                    <div class="col-12 text-left">
-                        <button type="submit" class="btn btn-primary">Clear</button>
+                    <div class="col-6 text-left">
+                        <button type="submit" name="operation" value="clear" class="btn btn-primary">Clear</button>
                     </div>
                 </div>
             </form>
