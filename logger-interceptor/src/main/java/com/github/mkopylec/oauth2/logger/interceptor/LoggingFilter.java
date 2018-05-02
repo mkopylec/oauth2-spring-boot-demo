@@ -1,18 +1,17 @@
 package com.github.mkopylec.oauth2.logger.interceptor;
 
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-
-import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.filter.OncePerRequestFilter;
+import java.io.IOException;
 
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -27,6 +26,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 
     private LoggerInterceptorProperties properties;
     private RestTemplate loggerWebClient = new RestTemplate();
+    private AntPathMatcher matcher = new AntPathMatcher();
 
     public LoggingFilter(LoggerInterceptorProperties properties) {
         this.properties = properties;
@@ -35,7 +35,7 @@ public class LoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         RequestData requestData = new RequestData()
-                .setTime(now().format(ofPattern("HH:mm:ss")))
+                .setTime(now().format(ofPattern("HH:mm:ss.SSS")))
                 .setApplication(properties.getApplicationName())
                 .setMethod(getMethod(request))
                 .setUrl(getUrl(request))
@@ -44,10 +44,17 @@ public class LoggingFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
         requestData.setResponseStatus(response.getStatus());
         try {
-            sendRequestLog(requestData);
+            if (hasToLogRequest(request)) {
+                sendRequestLog(requestData);
+            }
         } catch (Exception ex) {
             log.warn("Sending request: {} log to logger-web failed", requestData, ex);
         }
+    }
+
+    private boolean hasToLogRequest(HttpServletRequest request) {
+        return properties.getExcludedUriPatterns().stream()
+                .noneMatch(excludedUriPattern -> matcher.match(excludedUriPattern, request.getRequestURI()));
     }
 
     private void sendRequestLog(RequestData requestData) {

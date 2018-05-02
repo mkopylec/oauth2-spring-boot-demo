@@ -7,3 +7,4 @@ logging:
 
 logger-interceptor:
   application-name: authorization-server
+  excluded-uri-patterns: /bootstrap.min.css, /favicon.ico

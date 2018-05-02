@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,11 +36,35 @@ public class ClientCredentialsController {
 
     @PostMapping
     public ModelAndView getResource(@RequestParam("type") String type) {
-        String resource = type.equals("protected") ? requestProtectedResource() : requestPublicResource();
-        return new ClientCredentialsPage()
+        ClientCredentialsPage page = new ClientCredentialsPage()
                 .setClientId(clientProperties.getClientId())
-                .setClientSecret(clientProperties.getClientSecret())
-                .setResource(resource);
+                .setClientSecret(clientProperties.getClientSecret());
+        try {
+            switch (type) {
+                case "public":
+                    page.setResource(requestPublicResource());
+                    break;
+                case "protected":
+                    page.setResource(requestProtectedResource());
+                    break;
+                case "protected-error":
+                    page.setResource(requestProtectedResourceError());
+                    break;
+                case "protected-scope":
+                    page.setResource(requestScopeProtectedResource());
+                    break;
+                case "protected-invalid-scope":
+                    page.setResource(requestInvalidScopeProtectedResource());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid resource type requested: " + type);
+            }
+        } catch (HttpStatusCodeException e) {
+            page.setError(e.getResponseBodyAsString());
+        } catch (Exception e) {
+            page.setError(e.getMessage());
+        }
+        return page;
     }
 
     private String requestPublicResource() {
@@ -48,5 +73,17 @@ public class ClientCredentialsController {
 
     private String requestProtectedResource() {
         return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected", String.class).getBody();
+    }
+
+    private String requestProtectedResourceError() {
+        return restTemplate.getForEntity("http://localhost:8081/resource/protected", String.class).getBody();
+    }
+
+    private String requestScopeProtectedResource() {
+        return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected/scope", String.class).getBody();
+    }
+
+    private String requestInvalidScopeProtectedResource() {
+        return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected/scope/invalid", String.class).getBody();
     }
 }

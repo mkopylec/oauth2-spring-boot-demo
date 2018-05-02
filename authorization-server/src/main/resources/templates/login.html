@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link href="/bootstrap.min.css" rel="stylesheet"/>
-    <title>OAuth 2 Authorization Server</title>
+    <title>OAuth 2 authorization server</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
@@ -10,7 +10,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 text-center text-white bg-success p-2">
-            <h2>OAuth 2 Authorization Server</h2>
+            <h2>OAuth 2 authorization server</h2>
         </div>
     </div>
     <div th:if="${#httpServletRequest.parameterMap.containsKey('error')}" class="row">
@@ -25,13 +25,13 @@
                 <div class="form-group row">
                     <label for="username" class="col-form-label col-3">Username</label>
                     <div class="col-9">
-                        <input id="username" name="username" class="form-control" value="admin"/>
+                        <input id="username" name="username" class="form-control" value="resource-owner"/>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="password" class="col-form-label col-3">Passowrd</label>
                     <div class="col-9">
-                        <input id="password" type="password" name="password" class="form-control" value="admin"/>
+                        <input id="password" type="password" name="password" class="form-control" value="password"/>
                     </div>
                 </div>
                 <div class="form-group row">

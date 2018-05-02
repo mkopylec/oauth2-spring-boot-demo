@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import static java.util.Collections.emptyList;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -22,7 +24,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("resource-owner")
                 .password("password")
-                .authorities("administrator");
+                .authorities("owner")
+                .and()
+                .withUser("resource-user")
+                .password("password")
+                .authorities(emptyList());
     }
 
     @Bean
