@@ -35,14 +35,14 @@ public class LoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         RequestData requestData = new RequestData()
-                .setTime(now().format(ofPattern("HH:mm:ss.SSS")))
                 .setApplication(properties.getApplicationName())
                 .setMethod(getMethod(request))
                 .setUrl(getUrl(request))
                 .setAuthorizationHeader(getAuthorizationHeader(request))
                 .setBody(getBody(request));
         filterChain.doFilter(request, response);
-        requestData.setResponseStatus(response.getStatus());
+        requestData.setResponseStatus(response.getStatus())
+                .setTime(now().format(ofPattern("HH:mm:ss.SSS")));
         try {
             if (hasToLogRequest(request)) {
                 sendRequestLog(requestData);

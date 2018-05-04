@@ -1,0 +1,23 @@
+server:
+  port: 8085
+
+logging:
+  level:
+    org.springframework.security: debug
+
+security:
+  oauth2:
+    client:
+      client-id: client-application
+      client-secret: secret
+      grant-type: authorization_code
+      user-authorization-uri: http://localhost:8080/oauth/authorize
+      access-token-uri: http://localhost:8080/oauth/token
+    resource:
+      token-info-uri: http://localhost:8080/oauth/check_token
+    sso:
+      login-path: /**
+
+logger-interceptor:
+  application-name: client-by-authorization-code-grant
+  excluded-uri-patterns: /bootstrap.min.css, /favicon.ico

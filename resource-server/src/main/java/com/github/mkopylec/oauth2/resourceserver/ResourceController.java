@@ -12,6 +12,7 @@ public class ResourceController {
     public static final String SCOPE_PROTECTED_RESOURCE_URI = "/resource/protected/scope";
     public static final String INVALID_SCOPE_PROTECTED_RESOURCE_URI = "/resource/protected/scope/invalid";
     public static final String AUTHORITY_PROTECTED_RESOURCE_URI = "/resource/protected/authority";
+    public static final String INVALID_AUTHORITY_PROTECTED_RESOURCE_URI = "/resource/protected/authority/invalid";
 
     @GetMapping(PUBLIC_RESOURCE_URI)
     public String getPublicResource() {
@@ -35,5 +36,9 @@ public class ResourceController {
     @GetMapping(AUTHORITY_PROTECTED_RESOURCE_URI)
     public String getAuthorityProtectedResource(OAuth2Authentication authentication) {
         return "I'm a resource protected by " + authentication.getUserAuthentication().getAuthorities() + " authority";
+    }
+
+    @GetMapping(INVALID_AUTHORITY_PROTECTED_RESOURCE_URI)
+    public void getInvalidAuthorityProtectedResource() {
     }
 }

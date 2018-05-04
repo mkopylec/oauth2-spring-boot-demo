@@ -7,6 +7,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import static java.util.Collections.singletonList;
+import static org.springframework.security.core.userdetails.User.withUsername;
 
 @Configuration
 @EnableAuthorizationServer
@@ -25,7 +29,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .secret("secret")
                 .authorizedGrantTypes("authorization_code", "client_credentials", "implicit", "refresh_token", "password")
                 .scopes("read-resource")
-                .redirectUris("http://localhost:8085/client/authorization-code")
+                .redirectUris("http://127.0.0.1:8085/client/authorization-code")
                 .accessTokenValiditySeconds(30)
                 .and()
                 .withClient("resource-server")
@@ -39,6 +43,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.authenticationManager(authenticationManager);
+        endpoints.authenticationManager(authenticationManager)
+                .userDetailsService(new InMemoryUserDetailsManager(singletonList(
+                        withUsername("resource-owner").password("password").authorities("owner").build()
+                )));
     }
 }

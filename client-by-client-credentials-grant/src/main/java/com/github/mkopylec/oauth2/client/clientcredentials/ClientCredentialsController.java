@@ -1,5 +1,6 @@
 package com.github.mkopylec.oauth2.client.clientcredentials;
 
+import org.slf4j.Logger;
 import org.springframework.boot.autoconfigure.security.oauth2.OAuth2ClientProperties;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -13,9 +14,13 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Controller
 @RequestMapping("/client/client-credentials")
 public class ClientCredentialsController {
+
+    private static final Logger log = getLogger(ClientCredentialsController.class);
 
     private final OAuth2ClientProperties clientProperties;
     private final RestTemplate restTemplate;
@@ -63,6 +68,7 @@ public class ClientCredentialsController {
             page.setError(e.getResponseBodyAsString());
         } catch (Exception e) {
             page.setError(e.getMessage());
+            log.error("Error requesting resource", e);
         }
         return page;
     }

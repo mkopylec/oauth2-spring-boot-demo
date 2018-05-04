@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="/bootstrap.min.css" rel="stylesheet"/>
+    <title>OAuth 2 client by authorization code grant type</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 text-center text-white bg-secondary p-2">
+            <h2>OAuth 2 client by authorization code grant type</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 offset-2 col-xl-6 offset-xl-3 p-4">
+            <div class="row pb-4">
+                <div class="col-6 text-right" th:text="${'CLIENT ID: ' + clientId}"></div>
+                <div class="col-6 text-left" th:text="${'CLIENT SECRET: ' + clientSecret}"></div>
+            </div>
+            <div class="row pb-2">
+                <div class="col-8 offset-2">
+                    <div th:if="${error == null and resource == null}" class="alert alert-secondary text-center m-2">
+                        No resources requested.
+                    </div>
+                    <div th:if="${resource != null}" class="alert alert-success text-center m-2">
+                        Requested resource: <b th:text="${resource}"></b>.
+                    </div>
+                    <div th:if="${error != null}" class="alert alert-danger text-center m-2">
+                        Requesting resource failed: <b th:text="${error}"></b>.
+                    </div>
+                </div>
+            </div>
+            <form action="/client/authorization-code" method="post" class="p">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button type="submit" name="type" value="public" class="btn btn-secondary">Request public resource without access token</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button type="submit" name="type" value="protected" class="btn btn-secondary">Request protected resource using access token</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button type="submit" name="type" value="protected-error" class="btn btn-secondary">Request protected resource without access token</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button type="submit" name="type" value="protected-scope" class="btn btn-secondary">Request protected resource using access token with correct scope</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button type="submit" name="type" value="protected-invalid-scope" class="btn btn-secondary">Request protected resource using access token with invalid scope</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button type="submit" name="type" value="protected-authority" class="btn btn-secondary">Request protected resource using access token with correct authority</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button type="submit" name="type" value="protected-invalid-authority" class="btn btn-secondary">Request protected resource using access token with invalid authority</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-12 text-center text-muted small">OAuth 2 Demo 2018 Mariusz Kopylec</div>
+    </div>
+</div>
+
+</body>
+</html>
