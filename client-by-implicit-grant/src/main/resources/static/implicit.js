@@ -1,15 +1,5 @@
 var accessToken = null;
-var authorizationData = null;
-
-fetch('/client/implicit/authorization-data')
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (json) {
-        console.log(json);
-        authorizationData = json;
-    });
 
 function authorize() {
-    window.location.replace('')
+    window.location.replace('http://localhost:8080/oauth/token?response_type=token&client_id=client-application&redirect_uri=http://127.0.0.1:8086/client/implicit')
 }
