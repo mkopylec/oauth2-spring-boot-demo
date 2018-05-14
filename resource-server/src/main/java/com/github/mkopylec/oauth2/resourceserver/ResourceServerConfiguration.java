@@ -20,7 +20,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.cors().and().authorizeRequests()
                 .antMatchers(PUBLIC_RESOURCE_URI).permitAll()
                 .antMatchers(PROTECTED_RESOURCE_URI).authenticated()
                 .antMatchers(SCOPE_PROTECTED_RESOURCE_URI).access("#oauth2.hasScope('read-resource')")

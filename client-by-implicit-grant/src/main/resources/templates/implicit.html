@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link href="/bootstrap.min.css" rel="stylesheet"/>
+    <script src="/implicit.js"></script>
     <title>OAuth 2 client by implicit grant type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
@@ -20,54 +21,50 @@
             </div>
             <div class="row pb-2">
                 <div class="col-8 offset-2">
-                    <div th:if="${error == null and resource == null}" class="alert alert-secondary text-center m-2">
+                    <div id="no-response" class="alert alert-secondary text-center m-2">
                         No resources requested.
                     </div>
-                    <div th:if="${resource != null}" class="alert alert-success text-center m-2">
-                        Requested resource: <b th:text="${resource}"></b>.
+                    <div id="response" class="alert alert-success text-center m-2" style="display: none"></div>
+                    <div id="error" class="alert alert-danger text-center m-2" style="display: none"></div>
+                </div>
+            </div>
+            <div class="p">
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" onclick="requestPublicResource()">Request public resource without access token</button>
                     </div>
-                    <div th:if="${error != null}" class="alert alert-danger text-center m-2">
-                        Requesting resource failed: <b th:text="${error}"></b>.
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" onclick="requestProtectedResource()">Request protected resource using access token</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" onclick="requestProtectedResourceError()">Request protected resource without access token</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" onclick="requestScopeProtectedResource()">Request protected resource using access token with correct scope</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" onclick="requestInvalidScopeProtectedResource()">Request protected resource using access token with invalid scope</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" onclick="requestAuthorityScopeProtectedResource()">Request protected resource using access token with correct authority</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 text-center">
+                        <button class="btn btn-secondary" onclick="requestInvalidAuthorityProtectedResource()">Request protected resource using access token with invalid authority</button>
                     </div>
                 </div>
             </div>
-            <form action="/client/implicit" method="post" class="p">
-                <div class="form-group row">
-                    <div class="col-12 text-center">
-                        <button type="submit" name="type" value="public" class="btn btn-secondary">Request public resource without access token</button>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-12 text-center">
-                        <button type="submit" name="type" value="protected" class="btn btn-secondary">Request protected resource using access token</button>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-12 text-center">
-                        <button type="submit" name="type" value="protected-error" class="btn btn-secondary">Request protected resource without access token</button>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-12 text-center">
-                        <button type="submit" name="type" value="protected-scope" class="btn btn-secondary">Request protected resource using access token with correct scope</button>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-12 text-center">
-                        <button type="submit" name="type" value="protected-invalid-scope" class="btn btn-secondary">Request protected resource using access token with invalid scope</button>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-12 text-center">
-                        <button type="submit" name="type" value="protected-authority" class="btn btn-secondary">Request protected resource using access token with correct authority</button>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-12 text-center">
-                        <button type="submit" name="type" value="protected-invalid-authority" class="btn btn-secondary">Request protected resource using access token with invalid authority</button>
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
     <hr/>
