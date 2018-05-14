@@ -6,3 +6,5 @@ include 'logger-interceptor'
 include 'logger-web'
 include 'resource-server'
 include 'client-by-authorization-code-grant'
+include 'client-by-implicit-grant'
+

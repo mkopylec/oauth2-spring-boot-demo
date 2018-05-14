@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link href="/bootstrap.min.css" rel="stylesheet"/>
-    <title>OAuth 2 client by password grant type</title>
+    <title>OAuth 2 client by implicit grant type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
@@ -10,14 +10,13 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 text-center text-white bg-secondary p-2">
-            <h2>OAuth 2 client by password grant type</h2>
+            <h2>OAuth 2 client by implicit grant type</h2>
         </div>
     </div>
     <div class="row">
         <div class="col-8 offset-2 col-xl-6 offset-xl-3 p-4">
             <div class="row pb-4">
-                <div class="col-6 text-right" th:text="${'CLIENT ID: ' + clientId}"></div>
-                <div class="col-6 text-left" th:text="${'CLIENT SECRET: ' + clientSecret}"></div>
+                <div class="col-12 text-center" th:text="${'CLIENT ID: ' + clientId}"></div>
             </div>
             <div class="row pb-2">
                 <div class="col-8 offset-2">
@@ -32,19 +31,7 @@
                     </div>
                 </div>
             </div>
-            <form action="/client/password" method="post" class="p">
-                <div class="form-group row">
-                    <label for="username" class="col-form-label col-3">Username</label>
-                    <div class="col-9">
-                        <input id="username" name="username" class="form-control" value="resource-owner"/>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="password" class="col-form-label col-3">Passowrd</label>
-                    <div class="col-9">
-                        <input id="password" type="password" name="password" class="form-control" value="password"/>
-                    </div>
-                </div>
+            <form action="/client/implicit" method="post" class="p">
                 <div class="form-group row">
                     <div class="col-12 text-center">
                         <button type="submit" name="type" value="public" class="btn btn-secondary">Request public resource without access token</button>

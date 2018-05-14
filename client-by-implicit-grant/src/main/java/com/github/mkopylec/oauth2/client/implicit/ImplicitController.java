@@ -1,15 +1,9 @@
-package com.github.mkopylec.oauth2.client.authorizationcode;
+package com.github.mkopylec.oauth2.client.implicit;
 
-import org.slf4j.Logger;
 import org.springframework.boot.autoconfigure.security.oauth2.OAuth2ClientProperties;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.oauth2.client.token.grant.implicit.ImplicitResourceDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,60 +13,54 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import static java.net.URI.create;
-import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.security.oauth2.common.AuthenticationScheme.none;
 
 @Controller
-@RequestMapping("/client/authorization-code")
-public class AuthorizationCodeController {
-
-    private static final Logger log = getLogger(AuthorizationCodeController.class);
+@RequestMapping("/client/implicit")
+public class ImplicitController {
 
     private final OAuth2ClientProperties clientProperties;
-    private final RestTemplate restTemplate;
-    private final OAuth2RestTemplate oAuth2RestTemplate;
+    private final OAuth2ClientContext context;
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    public AuthorizationCodeController(OAuth2ClientProperties clientProperties, OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
+    public ImplicitController(OAuth2ClientProperties clientProperties, OAuth2ClientContext context) {
         this.clientProperties = clientProperties;
-        restTemplate = new RestTemplate();
-        this.oAuth2RestTemplate = new OAuth2RestTemplate(resource, context);
+        this.context = context;
     }
 
     @GetMapping
-    public ModelAndView showAuthorizationCodePage() {
-        return new AuthorizationCodePage()
-                .setClientId(clientProperties.getClientId())
-                .setClientSecret(clientProperties.getClientSecret());
+    public ModelAndView showImplicitPage() {
+        return new ImplicitPage()
+                .setClientId(clientProperties.getClientId());
     }
 
     @PostMapping
     public ModelAndView getResource(@RequestParam("type") String type) {
-        AuthorizationCodePage page = new AuthorizationCodePage()
-                .setClientId(clientProperties.getClientId())
-                .setClientSecret(clientProperties.getClientSecret());
+        ImplicitPage page = new ImplicitPage()
+                .setClientId(clientProperties.getClientId());
+        OAuth2RestTemplate oAuth2RestTemplate = createOAuth2RestTemplate();
         try {
             switch (type) {
                 case "public":
                     page.setResource(requestPublicResource());
                     break;
                 case "protected":
-                    page.setResource(requestProtectedResource());
+                    page.setResource(requestProtectedResource(oAuth2RestTemplate));
                     break;
                 case "protected-error":
                     page.setResource(requestProtectedResourceError());
                     break;
                 case "protected-scope":
-                    page.setResource(requestScopeProtectedResource());
+                    page.setResource(requestScopeProtectedResource(oAuth2RestTemplate));
                     break;
                 case "protected-invalid-scope":
-                    page.setResource(requestInvalidScopeProtectedResource());
+                    page.setResource(requestInvalidScopeProtectedResource(oAuth2RestTemplate));
                     break;
                 case "protected-authority":
-                    page.setResource(requestAuthorityProtectedResource());
+                    page.setResource(requestAuthorityScopeProtectedResource(oAuth2RestTemplate));
                     break;
                 case "protected-invalid-authority":
-                    page.setResource(requestInvalidAuthorityProtectedResource());
+                    page.setResource(requestInvalidAuthorityProtectedResource(oAuth2RestTemplate));
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid resource type requested: " + type);
@@ -81,7 +69,6 @@ public class AuthorizationCodeController {
             page.setError(e.getResponseBodyAsString());
         } catch (Exception e) {
             page.setError(e.getMessage());
-            log.error("Error requesting resource", e);
         }
         return page;
     }
@@ -90,7 +77,7 @@ public class AuthorizationCodeController {
         return restTemplate.getForEntity("http://localhost:8081/resource/public", String.class).getBody();
     }
 
-    private String requestProtectedResource() {
+    private String requestProtectedResource(OAuth2RestTemplate oAuth2RestTemplate) {
         return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected", String.class).getBody();
     }
 
@@ -98,25 +85,29 @@ public class AuthorizationCodeController {
         return restTemplate.getForEntity("http://localhost:8081/resource/protected", String.class).getBody();
     }
 
-    private String requestScopeProtectedResource() {
+    private String requestScopeProtectedResource(OAuth2RestTemplate oAuth2RestTemplate) {
         return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected/scope", String.class).getBody();
     }
 
-    private String requestInvalidScopeProtectedResource() {
+    private String requestInvalidScopeProtectedResource(OAuth2RestTemplate oAuth2RestTemplate) {
         return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected/scope/invalid", String.class).getBody();
     }
 
-    private String requestAuthorityProtectedResource() {
+    private String requestAuthorityScopeProtectedResource(OAuth2RestTemplate oAuth2RestTemplate) {
         return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected/authority", String.class).getBody();
     }
 
-    private String requestInvalidAuthorityProtectedResource() {
+    private String requestInvalidAuthorityProtectedResource(OAuth2RestTemplate oAuth2RestTemplate) {
         return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected/authority/invalid", String.class).getBody();
     }
 
-    private RequestEntity<Void> createRequest(OAuth2Authentication authentication, String url) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(AUTHORIZATION, "Bearer " + ((OAuth2AuthenticationDetails) authentication.getDetails()).getTokenValue());
-        return new RequestEntity<>(headers, HttpMethod.GET, create(url));
+    private OAuth2RestTemplate createOAuth2RestTemplate() {
+        ImplicitResourceDetails resource = new ImplicitResourceDetails();
+        resource.setClientId(clientProperties.getClientId());
+        resource.setClientSecret(clientProperties.getClientSecret());
+        resource.setAccessTokenUri("http://localhost:8080/oauth/token");
+        resource.setPreEstablishedRedirectUri("http://127.0.0.1:8086/client/implicit");
+        resource.setClientAuthenticationScheme(none);
+        return new OAuth2RestTemplate(resource, context);
     }
 }

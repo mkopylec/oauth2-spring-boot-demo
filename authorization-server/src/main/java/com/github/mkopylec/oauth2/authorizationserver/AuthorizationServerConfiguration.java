@@ -29,7 +29,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .secret("secret")
                 .authorizedGrantTypes("authorization_code", "client_credentials", "implicit", "refresh_token", "password")
                 .scopes("read-resource")
-                .redirectUris("http://127.0.0.1:8085/client/authorization-code")
+                .redirectUris("http://127.0.0.1:8085/login", "http://127.0.0.1:8086/client/implicit")
                 .accessTokenValiditySeconds(30)
                 .and()
                 .withClient("resource-server")

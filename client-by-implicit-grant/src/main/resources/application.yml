@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8086
 
 logging:
   level:
@@ -9,5 +9,8 @@ security:
   oauth2:
     client:
       client-id: client-application
-      client-secret: secret
   ignored: /**
+
+logger-interceptor:
+  application-name: client-by-implict-grant
+  excluded-uri-patterns: /bootstrap.min.css, /favicon.ico

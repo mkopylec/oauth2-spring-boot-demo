@@ -7,18 +7,15 @@ import org.springframework.security.oauth2.client.token.grant.password.ResourceO
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping("/client/password")
 public class PasswordController {
-
-    public static final String PASSWORD_PAGE_URI = "/client/password";
-    public static final String LOGIN_PAGE_URI = "/client/password/login";
-    private static final String CLIENT_ID = "client-application";
-    private static final String CLIENT_SECRET = "secret";
 
     private final OAuth2ClientProperties clientProperties;
     private final OAuth2ClientContext context;
@@ -28,24 +25,19 @@ public class PasswordController {
         this.clientProperties = clientProperties;
         this.context = context;
     }
-//
-//    @GetMapping(LOGIN_PAGE_URI)
-//    public String showLoginPage() {
-//        return "login";
-//    }
 
-    @GetMapping(PASSWORD_PAGE_URI)
+    @GetMapping
     public ModelAndView showPasswordPage() {
         return new PasswordPage()
-                .setClientId(CLIENT_ID)
-                .setClientSecret(CLIENT_SECRET);
+                .setClientId(clientProperties.getClientId())
+                .setClientSecret(clientProperties.getClientSecret());
     }
 
-    @PostMapping(PASSWORD_PAGE_URI)
+    @PostMapping
     public ModelAndView getResource(@RequestParam("type") String type, @RequestParam("username") String username, @RequestParam("password") String password) {
         PasswordPage page = new PasswordPage()
-                .setClientId(CLIENT_ID)
-                .setClientSecret(CLIENT_SECRET);
+                .setClientId(clientProperties.getClientId())
+                .setClientSecret(clientProperties.getClientSecret());
         OAuth2RestTemplate oAuth2RestTemplate = createOAuth2RestTemplate(username, password);
         try {
             switch (type) {
@@ -66,6 +58,9 @@ public class PasswordController {
                     break;
                 case "protected-authority":
                     page.setResource(requestAuthorityScopeProtectedResource(oAuth2RestTemplate));
+                    break;
+                case "protected-invalid-authority":
+                    page.setResource(requestInvalidAuthorityProtectedResource(oAuth2RestTemplate));
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid resource type requested: " + type);
@@ -102,10 +97,14 @@ public class PasswordController {
         return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected/authority", String.class).getBody();
     }
 
+    private String requestInvalidAuthorityProtectedResource(OAuth2RestTemplate oAuth2RestTemplate) {
+        return oAuth2RestTemplate.getForEntity("http://localhost:8081/resource/protected/authority/invalid", String.class).getBody();
+    }
+
     private OAuth2RestTemplate createOAuth2RestTemplate(String username, String password) {
         ResourceOwnerPasswordResourceDetails resource = new ResourceOwnerPasswordResourceDetails();
-        resource.setClientId(CLIENT_ID);
-        resource.setClientSecret(CLIENT_SECRET);
+        resource.setClientId(clientProperties.getClientId());
+        resource.setClientSecret(clientProperties.getClientSecret());
         resource.setUsername(username);
         resource.setPassword(password);
         resource.setAccessTokenUri("http://localhost:8080/oauth/token");
